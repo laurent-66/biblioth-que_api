@@ -18,12 +18,26 @@ class BookFixtures extends Fixture
     {
         $this->slugger = $slugger;
     }
+    
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
-
+        $booksByAuthor = 5;
         for ($i = 0; $i < 5; $i++) {
-            $authorRandom = rand(0, 4);
+            self::collectionBooksByAuthor( $booksByAuthor , $manager, $i , $faker);
+        }
+
+        $manager->flush();
+    }
+
+    private int $booksByAuthor;
+    private $manager;
+    private int $i;
+    private $faker;
+
+    private function collectionBooksByAuthor($booksByAuthor, $manager , $i , $faker){
+
+        for ($j = 0; $j < $booksByAuthor; $j++) {
             $book = new Book();
             $book->setIsbn( $faker->isbn13());
             $title = $faker->sentence(3);
@@ -32,12 +46,13 @@ class BookFixtures extends Fixture
             $book->setDescription($faker->sentence(20));
             $book->setCreatedAt(new \Datetime);
             $book->setUpdatedAt(new \Datetime);
-            $book->setAuthor($this->getReference('auth-ref_' . $authorRandom));
+            $book->setAuthor($this->getReference('auth-ref_' . $i));
             $manager->persist($book);
         }
 
-        $manager->flush();
     }
+
+
     public function getDependencies()
     {
         return [
