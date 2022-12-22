@@ -37,7 +37,7 @@ class Author
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'Author', targetEntity: Book::class)]
-    #[Groups(['read', 'write'])]
+    #[Groups(['write'])]
     private Collection $books;
 
     public function __construct()

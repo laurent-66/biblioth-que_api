@@ -28,24 +28,22 @@ class Book
     #[Groups(['read', 'write'])]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['read', 'write'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read'])]
     private ?string $slug = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['read', 'write'])]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['read', 'write'])]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['read', 'write'])]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'books')]
-    #[Groups(['write'])]
+    #[Groups(['read','write'])]
     private ?Author $Author = null;
 
     public function getId(): ?int
@@ -106,7 +104,7 @@ class Book
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -118,7 +116,7 @@ class Book
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
