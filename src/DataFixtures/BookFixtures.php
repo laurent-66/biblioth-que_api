@@ -49,9 +49,8 @@ class BookFixtures extends Fixture
             $book->setAuthor($this->getReference('auth-ref_' . $i));
             $manager->persist($book);
         }
-
+        $this->addReference(sprintf(self::BOOK_REF, $i), $book);
     }
-
 
     public function getDependencies()
     {
