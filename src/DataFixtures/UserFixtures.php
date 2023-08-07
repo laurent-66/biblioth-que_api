@@ -28,7 +28,23 @@ class UserFixtures extends Fixture
     {
         $faker = Factory::create('fr_FR');
 
-        for ($i = 0; $i < 5; $i++) {
+        //default user credentials
+            $user = new User();
+            $user->setEmail('ibernier@yahoo.fr');
+            $plaintextPassword = 'Password';
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $plaintextPassword
+            );
+            $user->setPassword($hashedPassword);
+            $user->setCreatedAt(new \Datetime);
+            $user->setUpdatedAt(new \Datetime);
+            $user->addBook($this->getReference('book-ref_1'));
+            $manager->persist($user);
+
+
+
+        for ($i = 1; $i < 5; $i++) {
             $user = new User();
             $user->setEmail($faker->email());
             $plaintextPassword = 'Password';
