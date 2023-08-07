@@ -2,16 +2,25 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BookRepository;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[ApiResource(
+	// operations: [ new Get(), new Post() , new Put(), new Delete(), new GetCollection()],
+    operations: [ new Get(), new GetCollection()],
     normalizationContext: ['groups' => ['read']],
     denormalizationContext: ['groups' => ['write']],
 )]
@@ -23,10 +32,16 @@ class Book
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Isbn(
+        type: Assert\Isbn::ISBN_13,
+        message: 'L\'isbn doit comporter 10 ou 13 chiffres.',
+    )]
     #[Groups(['read', 'write'])]
     private ?string $isbn = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     #[Groups(['read', 'write'])]
     private ?string $title = null;
 
@@ -45,7 +60,7 @@ class Book
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'books')]
-    #[Groups(['read','write'])]
+    #[Groups(['read'])]
     private ?Author $Author = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'books')]
